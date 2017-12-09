@@ -1,0 +1,216 @@
+<html>
+<head>
+<title> Bounty task </title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+</head>
+<body>
+<div class="container">
+  <div class="row">
+	<div class="col-md-5"  style="margin-top:50px;">
+      <h4>BENEFITS DELIVERY STRATEGY</h4>
+	  <p>
+		You responded XXXXXXXXXXXXX (List of the challenges they picked). See what issues your peers are working through in the graph.
+	  </p>
+    </div>
+	<div class="col-md-7"  style="margin-top:50px;">
+     <canvas id="barChart"  width="480" height="380"></canvas>
+    </div>
+  </div>
+  <hr>
+   <div class="row">	
+	<div class="col-md-7"  style="margin-top:50px;">
+     <canvas id="pieChart"  width="480" height="380"></canvas>
+    </div>
+	<div class="col-md-5"  style="margin-top:50px;">
+      <h4>WHEN MIGHT YOU CONSIDER CHANGING YOUR SOFTWARE SYSTEM?</h4>
+	  <p>
+		<ol type="A" start="A">
+		  <li>Response 2-4 Months</li>
+		  <li>Response 4-6 Months</li>
+		  <li>Response 6-12 Months</li>
+		  <li>Response 1 year+</li>
+		</ol>
+	  </p>
+    </div>
+  </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
+<script>
+// Bar chart
+var canvas = document.getElementById("barChart");
+var ctx = canvas.getContext("2d");
+
+var horizonalLinePlugin = {
+  afterDraw: function(chartInstance) {
+    var yScale = chartInstance.scales["y-axis-0"];
+    var canvas = chartInstance.chart;
+    var ctx = canvas.ctx;
+    var index;
+    var line;
+    var style;
+
+    if (chartInstance.options.horizontalLine) {
+      for (index = 0; index < chartInstance.options.horizontalLine.length; index++) {
+        line = chartInstance.options.horizontalLine[index];
+
+        if (!line.style) {
+          style = "rgba(169,169,169, .6)";
+        } else {
+          style = line.style;
+        }
+
+        if (line.y) {
+          yValue = yScale.getPixelForValue(line.y);
+        } else {
+          yValue = 0;
+        }
+
+        ctx.lineWidth =20;
+
+        if (yValue) {
+          ctx.beginPath();
+          ctx.moveTo(5, yValue);
+          ctx.lineTo(canvas.width-5, yValue);
+          ctx.strokeStyle = style;
+          ctx.stroke();
+        }
+
+        if (line.text) {
+          ctx.fillStyle = style;
+          ctx.fillText(line.text, 0, yValue + ctx.lineWidth);
+        }
+      }
+      return;
+    };
+  }
+};
+Chart.pluginService.register(horizonalLinePlugin);
+Chart.plugins.register({
+  beforeDraw: function(chartInstance) {
+    var ctx = chartInstance.chart.ctx;
+    ctx.fillStyle = "#ead54d";
+    ctx.fillRect(0, 0, chartInstance.chart.width, chartInstance.chart.height);
+  }
+});
+
+new Chart(document.getElementById("barChart"), {
+    type: 'bar',
+    data: {
+      labels: ["Free", "Fast", "Rapid", "Legacy", "Clean Activity"],
+      datasets: [
+        {
+          label: "Value",
+          backgroundColor: ["#FF3D67", "#059BFF","#22CECE","#FFC233","#FF9124"],
+		  borderColor:"#FFFFFF",
+		  borderWidth:1,
+          data: [478,1267,2734,1584,3633]
+        }
+      ]
+    },
+    options: {
+	responsive:true,
+      legend: { display: false },
+      title: {
+        display: true,
+        text: 'Benefits Delivery Strategy'
+      },
+      scales:
+        {
+            xAxes: [{
+                display: false
+            }],
+            yAxes: [{
+                display: false,
+                ticks: {
+                suggestedMin: -1000
+            }
+            }]
+        },
+      "horizontalLine": [{
+      "y": -400,
+      "style": "rgba(255, 255,255,255)"
+        }]
+    }
+});
+
+// pieChart chart
+new Chart(document.getElementById("pieChart"), {
+    type: 'pie',
+    data: {
+      labels: ["2-4 Months", "4-6 Months", "6-12 Months", "1 Year+"],
+      datasets: [
+        {
+          label: "Value",
+          backgroundColor: ["#FF3D67", "#059BFF","#22CECE","#FFC233","#FF9124"],
+          data: [2478,5267,734,784]
+        }
+      ]
+    },
+    options: {
+      legend: { display: false }
+	  ,
+   animation: {
+      duration: 0,
+      onComplete: function () {
+        var self = this,
+            chartInstance = this.chart,
+            ctx = chartInstance.ctx;
+
+        ctx.font = '18px Arial';
+        ctx.textAlign = "center";
+        ctx.fillStyle = "#ffffff";
+
+        Chart.helpers.each(self.data.datasets.forEach((dataset, datasetIndex) => {
+            var meta = self.getDatasetMeta(datasetIndex),
+                total = 0, //total values to compute fraction
+                labelxy = [],
+                offset = Math.PI / 2, //start sector from top
+                radius,
+                centerx,
+                centery, 
+                lastend = 0; //prev arc's end line: starting with 0
+
+            for (var val of dataset.data) { total += val; } 
+
+            Chart.helpers.each(meta.data.forEach((element, index) => {
+                radius = 0.9 * element._model.outerRadius - element._model.innerRadius;
+                centerx = element._model.x;
+                centery = element._model.y;
+                var thispart = dataset.data[index],
+                    arcsector = Math.PI * (2 * thispart / total);
+                if (element.hasValue() && dataset.data[index] > 0) {
+                  labelxy.push(lastend + arcsector / 2 + Math.PI + offset);
+                }
+                else {
+                  labelxy.push(-1);
+                }
+                lastend += arcsector;
+            }), self)
+
+            var lradius = radius * 3 / 4;
+            for (var idx in labelxy) {
+              if (labelxy[idx] === -1) continue;
+              var langle = labelxy[idx],
+                  dx = centerx + lradius * Math.cos(langle),
+                  dy = centery + lradius * Math.sin(langle),
+                  val = Math.round(dataset.data[idx] / total * 100);
+              ctx.fillText(val + '%', dx, dy);
+            }
+
+        }), self);
+      }
+    },
+    }
+});
+
+
+
+</script>
+
+
+</body>
+</html>
