@@ -142,20 +142,7 @@ new Chart(document.getElementById("barChart"), {
 //Horizontal Bar Chart
 
 var ctx = document.getElementById("horizontalBar").getContext("2d");
-var data = {
-    labels: [
-        "ME",
-        "SE"
-    ],
-    datasets: [{
-        label: "Test",
-        data: [100, 75],
-        backgroundColor: ["#669911", "#119966"],
-        hoverBackgroundColor: ["#66A2EB", "#FCCE56"]
-    }]
-};
-
-var MeSeChart = new Chart(ctx, {
+var horizontalBarChart = new Chart(ctx, {
     type: 'horizontalBar',
     
 	data: {
@@ -206,8 +193,7 @@ new Chart(document.getElementById("pieChart"), {
       ]
     },
     options: {
-      legend: { display: false }
-	  ,
+      legend: { display: false },
    animation: {
       duration: 0,
       onComplete: function () {
