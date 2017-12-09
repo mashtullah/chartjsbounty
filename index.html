@@ -1,33 +1,47 @@
 <html>
 <head>
 <title> Bounty task </title>
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
-
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
 </head>
 <body>
-<div class="container">
-  <div class="row">
-	<div class="col-md-5"  style="margin-top:50px;">
-      <h4>BENEFITS DELIVERY STRATEGY</h4>
-	  <p>
-		You responded XXXXXXXXXXXXX (List of the challenges they picked). See what issues your peers are working through in the graph.
-	  </p>
-    </div>
-	<div class="col-md-7"  style="margin-top:50px;">
-     <canvas id="barChart"  width="480" height="380"></canvas>
-    </div>
-  </div>
-  <hr>
-  <canvas id="horizontalBar"></canvas>
-  <hr>
-   <div class="row">	
-	<div class="col-md-7"  style="margin-top:50px;">
-     <canvas id="pieChart"  width="480" height="380"></canvas>
-    </div>
-	<div class="col-md-5"  style="margin-top:50px;">
+<table>
+	<tr>
+		<td>
+			<div class="col-md-5"  style="margin-top:50px;vertical-align:text-top;">
+			  <h4>BENEFITS DELIVERY STRATEGY</h4>
+			  <p>
+				You responded XXXXXXXXXXXXX (List of the challenges they picked). See what issues your peers are working through in the graph.
+			  </p>
+			</div>
+		</td>
+		<td>
+			<div class="col-md-7"  style="margin-top:50px;vertical-align:top;">
+			   <canvas id="barChart"  width="480" height="380"></canvas>
+			</div>
+		</td>
+	</tr>
+	<tr>		
+		<td>
+			<div class="col-md-7"  style="margin-top:50px;vertical-align:top;">
+			   <canvas id="horizontalBar"></canvas>
+			</div>
+		</td>
+		<td>
+			<div class="col-md-5"  style="margin-top:50px;vertical-align:top;">
+			  <h4>BENEFITS MARKETING</h4>
+			  <p>
+				You responded XXXXXXXXXXXXX (List of the challenges they picked). See what issues your peers are working through in the graph.
+			  </p>
+			</div>
+		</td>
+	</tr>
+	<tr>		
+		<td>
+			<div class="col-md-7"  style="margin-top:50px;">
+				<canvas id="pieChart"  width="480" height="380"></canvas>
+			</div>
+		</td>
+		<td>
+			<div class="col-md-5"  style="margin-top:50px;">
       <h4>WHEN MIGHT YOU CONSIDER CHANGING YOUR SOFTWARE SYSTEM?</h4>
 	  <p>
 		<ol type="A" start="A">
@@ -38,13 +52,42 @@
 		</ol>
 	  </p>
     </div>
-  </div>
-</div>
+		</td>
+	</tr>
+</table>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
+
 <script>
 // Bar chart
 var canvas = document.getElementById("barChart");
 var ctx = canvas.getContext("2d");
+
+var originalLineDraw = Chart.controllers.line.prototype.draw;
+Chart.helpers.extend(Chart.controllers.line.prototype, {
+  draw: function() {
+    originalLineDraw.apply(this, arguments);
+
+    var chart = this.chart;
+    var ctx = chart.chart.ctx;
+
+    var index = chart.config.data.lineAtIndex;
+    if (index) {
+      var xaxis = chart.scales['x-axis-0'];
+      var yaxis = chart.scales['y-axis-0'];
+
+      ctx.save();
+      ctx.beginPath();
+      ctx.moveTo(xaxis.getPixelForValue(undefined, index), yaxis.top);
+      ctx.strokeStyle = '#ff0000';
+      ctx.lineTo(xaxis.getPixelForValue(undefined, index), yaxis.bottom);
+      ctx.stroke();
+      ctx.restore();
+    }
+  }
+});
+
+
 
 var horizonalLinePlugin = {
   afterDraw: function(chartInstance) {
@@ -90,6 +133,7 @@ var horizonalLinePlugin = {
     };
   }
 };
+
 Chart.pluginService.register(horizonalLinePlugin);
 Chart.plugins.register({
   beforeDraw: function(chartInstance) {
@@ -174,8 +218,25 @@ var horizontalBarChart = new Chart(ctx, {
                 suggestedMin: -1000
             }
             }]
-        }
-    }
+        },
+		annotation: {
+        annotations: [
+          {
+            type: "line",
+            mode: "vertical",
+            scaleID: "x-axis-0",
+            value: 1000,
+            borderColor: "red",
+            label: {
+              content: "TODAY",
+              enabled: true,
+              position: "top"
+            }
+          }
+        ]
+      }
+    },
+	lineAtIndex:2,
 });
 
 
