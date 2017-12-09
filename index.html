@@ -100,7 +100,7 @@ Chart.plugins.register({
 new Chart(document.getElementById("barChart"), {
     type: 'bar',
     data: {
-      labels: ["Free", "Fast", "Rapid", "Legacy", "Clean Activity"],
+      labels: ["-", "-", "-", "-", "-"],
       datasets: [
         {
           label: "Value",
@@ -115,8 +115,7 @@ new Chart(document.getElementById("barChart"), {
 	responsive:true,
       legend: { display: false },
       title: {
-        display: true,
-        text: 'Benefits Delivery Strategy'
+        display:false
       },
       scales:
         {
