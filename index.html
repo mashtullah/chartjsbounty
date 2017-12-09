@@ -21,6 +21,8 @@
     </div>
   </div>
   <hr>
+  <canvas id="horizontalBar"></canvas>
+  <hr>
    <div class="row">	
 	<div class="col-md-7"  style="margin-top:50px;">
      <canvas id="pieChart"  width="480" height="380"></canvas>
@@ -115,7 +117,7 @@ new Chart(document.getElementById("barChart"), {
 	responsive:true,
       legend: { display: false },
       title: {
-        display:false
+        display: false
       },
       scales:
         {
@@ -136,6 +138,58 @@ new Chart(document.getElementById("barChart"), {
     }
 });
 
+
+//Horizontal Bar Chart
+
+var ctx = document.getElementById("horizontalBar").getContext("2d");
+var data = {
+    labels: [
+        "ME",
+        "SE"
+    ],
+    datasets: [{
+        label: "Test",
+        data: [100, 75],
+        backgroundColor: ["#669911", "#119966"],
+        hoverBackgroundColor: ["#66A2EB", "#FCCE56"]
+    }]
+};
+
+var MeSeChart = new Chart(ctx, {
+    type: 'horizontalBar',
+    
+	data: {
+      labels: ["-", "-", "-", "-", "-"],
+      datasets: [
+        {
+          label: "Value",
+          backgroundColor: ["#FF3D67", "#059BFF","#22CECE","#FFC233","#FF9124"],
+		  borderColor:"#FFFFFF",
+		  borderWidth:1,
+          data: [478,1267,2734,1584,3633]
+        }
+      ]
+    },
+    options: {
+	responsive:true,
+      legend: { display: false },
+      title: {
+        display: false
+      },
+      scales:
+        {
+            xAxes: [{
+                display: false
+            }],
+            yAxes: [{
+                display: false
+            }
+            }]
+        }
+    }
+});
+
+
 // pieChart chart
 new Chart(document.getElementById("pieChart"), {
     type: 'pie',
@@ -145,7 +199,7 @@ new Chart(document.getElementById("pieChart"), {
         {
           label: "Value",
           backgroundColor: ["#FF3D67", "#059BFF","#22CECE","#FFC233","#FF9124"],
-          data: [2478,5267,734,784]
+          data: [3278,4967,804,624]
         }
       ]
     },
@@ -165,13 +219,13 @@ new Chart(document.getElementById("pieChart"), {
 
         Chart.helpers.each(self.data.datasets.forEach((dataset, datasetIndex) => {
             var meta = self.getDatasetMeta(datasetIndex),
-                total = 0, //total values to compute fraction
+                total = 0, 
                 labelxy = [],
-                offset = Math.PI / 2, //start sector from top
+                offset = Math.PI / 2, 
                 radius,
                 centerx,
                 centery, 
-                lastend = 0; //prev arc's end line: starting with 0
+                lastend = 0; 
 
             for (var val of dataset.data) { total += val; } 
 
